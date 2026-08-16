@@ -1,0 +1,66 @@
+:root {
+  color-scheme: dark;
+  --bg: #07111f;
+  --panel: #101d2d;
+  --panel-2: #0c1725;
+  --line: #26384d;
+  --text: #f3f7fb;
+  --muted: #9cabc0;
+  --blue: #338cff;
+  --green: #23d07d;
+  --red: #ff5c68;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, "Noto Sans JP", system-ui, sans-serif; }
+.hero { max-width: 1280px; margin: auto; padding: 54px 30px 30px; display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.eyebrow { margin: 0 0 9px; color: #69a9ff; font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+h1 { margin: 0; font-size: clamp(30px, 5vw, 52px); letter-spacing: .02em; }
+.lead { margin: 12px 0 0; color: var(--muted); }
+.download { padding: 13px 18px; border-radius: 10px; background: var(--blue); color: white; text-decoration: none; font-weight: 800; white-space: nowrap; }
+main { max-width: 1280px; margin: auto; padding: 0 30px 40px; }
+.notice { margin: 10px 0 18px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); color: var(--muted); font-size: 13px; }
+.notice.ready { border-color: #1c6e4b; color: #8ce5ba; }
+.notice.error { border-color: #8a3740; color: #ffabb2; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+.metrics article { padding: 19px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.metrics span { display: block; color: var(--muted); font-size: 12px; }
+.metrics strong { display: block; margin-top: 7px; font-size: 24px; }
+.panel { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--panel); }
+.toolbar { display: flex; justify-content: space-between; align-items: end; gap: 20px; padding: 22px; }
+h2 { margin: 0 0 5px; font-size: 21px; }
+.toolbar p { margin: 0; color: var(--muted); font-size: 13px; }
+.controls { display: flex; gap: 12px; }
+.controls label { color: var(--muted); font-size: 11px; }
+input, select { display: block; min-width: 150px; margin-top: 5px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); color: var(--text); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 850px; }
+th { padding: 11px 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #0a1522; color: var(--muted); font-size: 11px; text-align: left; }
+td { padding: 13px 14px; border-bottom: 1px solid #1d2d40; font-size: 13px; }
+tbody tr:hover { background: #142439; }
+.rank { color: #68a9ff; font-weight: 800; }
+.code, .number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.number { text-align: right; }
+.positive { color: var(--green); font-weight: 800; }
+.negative { color: var(--red); font-weight: 800; }
+.badge, .action { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+.badge.ok { background: #164d38; color: #75e6ae; }
+.badge.ng { background: #513039; color: #ff9da6; }
+.action { background: #173c68; color: #8ec2ff; }
+.chart { color: #70adff; text-decoration: none; font-weight: 700; }
+.empty { padding: 30px; text-align: center; color: var(--muted); }
+.rules { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 14px; margin-top: 18px; }
+.rules article { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel-2); }
+.rules h3 { margin: 0 0 12px; font-size: 16px; }
+.rules p, .rules li { color: var(--muted); font-size: 12px; line-height: 1.75; }
+.rules ol { margin: 0; padding-left: 20px; }
+footer { max-width: 1280px; margin: auto; padding: 0 30px 32px; display: flex; justify-content: space-between; color: #74849a; font-size: 11px; }
+
+@media (max-width: 800px) {
+  .hero, .toolbar, footer { align-items: stretch; flex-direction: column; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .rules { grid-template-columns: 1fr; }
+  .controls { flex-wrap: wrap; }
+  .download { text-align: center; }
+}
+

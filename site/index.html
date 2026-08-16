@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="JPX400 EMA9/21 BUYシグナルランキング">
+  <title>EMA SIGNALS | JPX400</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">JPX400 / RANK 1 STRATEGY</p>
+      <h1>EMA9/21 BUY SIGNALS</h1>
+      <p class="lead">日足CのBUY確定銘柄を、63日モメンタムの高い順に表示します。</p>
+    </div>
+    <a class="download" href="latest.csv" download>ランキングCSVを保存</a>
+  </header>
+
+  <main>
+    <section class="notice" id="status">データを読み込んでいます…</section>
+
+    <section class="metrics" aria-label="集計">
+      <article><span>本日のBUY</span><strong id="candidate-count">—</strong></article>
+      <article><span>週足OK</span><strong id="weekly-ok-count">—</strong></article>
+      <article><span>取得成功</span><strong id="fresh-count">—</strong></article>
+      <article><span>シグナル日</span><strong id="as-of-date">—</strong></article>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div>
+          <h2>本日のBUY候補ランキング</h2>
+          <p>上位ほど直近約3か月の上昇率が高い銘柄です。</p>
+        </div>
+        <div class="controls">
+          <label>週足
+            <select id="weekly-filter">
+              <option value="ALL">すべて</option>
+              <option value="OK">OKのみ</option>
+              <option value="NG">NGのみ</option>
+            </select>
+          </label>
+          <label>検索
+            <input id="search" type="search" placeholder="コード・銘柄名">
+          </label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>順位</th><th>コード</th><th>銘柄名</th><th>終値</th><th>63日モメンタム</th><th>週足</th><th>行動</th><th>チャート</th></tr></thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+        <p class="empty" id="empty" hidden>該当するBUY候補はありません。</p>
+      </div>
+    </section>
+
+    <section class="rules">
+      <article>
+        <h3>BUY判定</h3>
+        <ol>
+          <li>前日終値が前日EMA9より上</li>
+          <li>当日の値幅がEMA9〜EMA21帯に入る</li>
+          <li>当日終値がEMA21より上</li>
+          <li>陽線かつ当日終値が前日高値を上回る</li>
+        </ol>
+      </article>
+      <article>
+        <h3>売買タイミング</h3>
+        <p>BUYは確定日足の引け後に表示し、実際のエントリーは翌営業日の始値です。</p>
+        <p>週足OK/NGは参考情報で、1位戦略のBUY対象からNGを除外しません。</p>
+      </article>
+      <article>
+        <h3>出口</h3>
+        <p>確定週足でEMA9がEMA21を下回ったら、翌営業日の始値で売却します。</p>
+        <p>固定利確・固定ストップは使用しません。</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <span id="fetched-at"></span>
+    <span>投資判断はご自身の責任で行ってください。</span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
+
