@@ -1,6 +1,8 @@
 name: Update EMA signals
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: "45 16 * * 1-5"
@@ -46,4 +48,3 @@ jobs:
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
