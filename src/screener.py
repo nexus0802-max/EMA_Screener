@@ -238,10 +238,31 @@ def save_results(output: Path, metadata: dict[str, Any], candidates: pd.DataFram
         json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     records = json.loads(candidates.to_json(orient="records", force_ascii=False))
-    (output / "data.json").write_text(
-        json.dumps({"metadata": metadata, "candidates": records}, ensure_ascii=False, indent=2),
-        encoding="utf-8",
+    payload = {"metadata": metadata, "candidates": records}
+    payload_text = json.dumps(payload, ensure_ascii=False, indent=2)
+    (output / "data.json").write_text(payload_text, encoding="utf-8")
+    build_self_contained_page(output, payload_text)
+
+
+def build_self_contained_page(output: Path, payload_text: str) -> None:
+    """Embed CSS, JavaScript, and scan data so index.html also works as one local file."""
+    index_path = output / "index.html"
+    css_path = output / "styles.css"
+    js_path = output / "app.js"
+    if not all(path.is_file() for path in (index_path, css_path, js_path)):
+        return
+    html = index_path.read_text(encoding="utf-8")
+    css = css_path.read_text(encoding="utf-8")
+    javascript = js_path.read_text(encoding="utf-8")
+    safe_payload = payload_text.replace("</script", "<\\/script")
+    html = html.replace('<link rel="stylesheet" href="styles.css">', f"<style>\n{css}\n</style>")
+    html = html.replace(
+        '<script src="app.js"></script>',
+        f'<script id="screener-data" type="application/json">\n{safe_payload}\n</script>'
+        f"\n<script>\n{javascript}\n</script>",
     )
+    index_path.write_text(html, encoding="utf-8")
+    (output / "EMA_Screener.html").write_text(html, encoding="utf-8")
 
 
 def run(components_path: Path, output: Path, as_of: date | None = None) -> tuple[dict[str, Any], pd.DataFrame]:
@@ -277,4 +298,3 @@ def parse_args() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_args()
     run(args.components, args.output, args.as_of)
-

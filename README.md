@@ -10,6 +10,7 @@ JPX400の現在構成銘柄を対象に、EMA9/21押し目戦略のBUY候補を�
 - 終値、日足・週足EMA
 - TradingViewチャートへのリンク
 - ランキングCSVのダウンロード
+- データ・CSS・JavaScriptを内蔵した単一HTML（`EMA_Screener.html`）
 
 ## 売買ルール
 
@@ -29,6 +30,8 @@ BUY条件は次のすべてを満たした確定日足です。
 3. `Actions` → `Update EMA signals` → `Run workflow` を一度実行する
 
 以後は平日16:45（日本時間）に自動更新します。取引所休業日は直近取引日の結果を表示します。GitHub Actionsの混雑やYahoo Finance側の状態により、開始遅延・取得失敗が起こることがあります。その場合は手動で再実行してください。
+
+生成される`index.html`と`EMA_Screener.html`にはランキングデータを直接埋め込んでいます。そのため、`data.json`への通信ができない環境や、ダウンロードしたHTMLを単体で開いた場合でも閲覧・検索・CSV保存ができます。
 
 ## ローカル実行
 
