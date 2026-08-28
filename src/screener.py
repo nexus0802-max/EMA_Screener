@@ -1,4 +1,4 @@
-"""Run the JPX400 EMA9/21 rank-1 BUY screener and build static data files."""
+"""Run the JPX400 EMA20/30 rank-1 BUY screener and build static data files."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ import yfinance as yf
 
 JST = ZoneInfo("Asia/Tokyo")
 REQUIRED_OHLC = ("Open", "High", "Low", "Close")
-RULE_NAME = "1位戦略：週足買いフィルターなし / 日足C / 週足EMA9・21デッドクロス出口"
+RULE_NAME = "1位戦略：週足買いフィルターなし / 日足C / 週足EMA20・30デッドクロス出口"
 PRICE_SOURCE = "Yahoo Finance（株式分割・配当調整済み）"
 
 
@@ -50,31 +50,31 @@ def add_rank1_signals(frame: pd.DataFrame) -> pd.DataFrame:
     if data.empty:
         return data
 
-    data["ema9"] = data["Close"].ewm(span=9, adjust=False, min_periods=9).mean()
-    data["ema21"] = data["Close"].ewm(span=21, adjust=False, min_periods=21).mean()
+    data["ema20"] = data["Close"].ewm(span=20, adjust=False, min_periods=20).mean()
+    data["ema30"] = data["Close"].ewm(span=30, adjust=False, min_periods=30).mean()
     data["momentum63"] = data["Close"].pct_change(63)
 
     weekly = data.resample("W-FRI").agg(
         {"Open": "first", "High": "max", "Low": "min", "Close": "last"}
     ).dropna()
-    weekly["weekly_ema9"] = weekly["Close"].ewm(span=9, adjust=False, min_periods=9).mean()
-    weekly["weekly_ema21"] = weekly["Close"].ewm(span=21, adjust=False, min_periods=21).mean()
+    weekly["weekly_ema20"] = weekly["Close"].ewm(span=20, adjust=False, min_periods=20).mean()
+    weekly["weekly_ema30"] = weekly["Close"].ewm(span=30, adjust=False, min_periods=30).mean()
     weekly["weekly_filter_ok"] = (
-        (weekly["weekly_ema9"] > weekly["weekly_ema21"])
-        & (weekly["weekly_ema21"] > weekly["weekly_ema21"].shift(1))
+        (weekly["weekly_ema20"] > weekly["weekly_ema30"])
+        & (weekly["weekly_ema30"] > weekly["weekly_ema30"].shift(1))
     )
-    weekly["weekly_dead_cross"] = weekly["weekly_ema9"] < weekly["weekly_ema21"]
-    for column in ("weekly_ema9", "weekly_ema21", "weekly_filter_ok", "weekly_dead_cross"):
+    weekly["weekly_dead_cross"] = weekly["weekly_ema20"] < weekly["weekly_ema30"]
+    for column in ("weekly_ema20", "weekly_ema30", "weekly_filter_ok", "weekly_dead_cross"):
         data[column] = weekly[column].reindex(data.index, method="ffill")
     data["weekly_filter_ok"] = data["weekly_filter_ok"].eq(True)
     data["weekly_dead_cross"] = data["weekly_dead_cross"].eq(True)
 
     bounce = (data["Close"] > data["Open"]) & (data["Close"] > data["High"].shift(1))
     data["buy_signal"] = (
-        (data["Close"].shift(1) > data["ema9"].shift(1))
-        & (data["Low"] <= data["ema9"])
-        & (data["High"] >= data["ema21"])
-        & (data["Close"] > data["ema21"])
+        (data["Close"].shift(1) > data["ema20"].shift(1))
+        & (data["Low"] <= data["ema20"])
+        & (data["High"] >= data["ema30"])
+        & (data["Close"] > data["ema30"])
         & bounce
     ).fillna(False)
     return data
@@ -189,10 +189,10 @@ def rank_latest_candidates(
                 "weekly_status": "OK" if weekly_ok else "NG",
                 "weekly_dead_cross": weekly_dc,
                 "exit_status": "WEEKLY DC" if weekly_dc else "HOLD",
-                "daily_ema9": round(float(latest["ema9"]), 2),
-                "daily_ema21": round(float(latest["ema21"]), 2),
-                "weekly_ema9": round(float(latest["weekly_ema9"]), 2) if pd.notna(latest["weekly_ema9"]) else None,
-                "weekly_ema21": round(float(latest["weekly_ema21"]), 2) if pd.notna(latest["weekly_ema21"]) else None,
+                "daily_ema20": round(float(latest["ema20"]), 2),
+                "daily_ema30": round(float(latest["ema30"]), 2),
+                "weekly_ema20": round(float(latest["weekly_ema20"]), 2) if pd.notna(latest["weekly_ema20"]) else None,
+                "weekly_ema30": round(float(latest["weekly_ema30"]), 2) if pd.notna(latest["weekly_ema30"]) else None,
                 "action": "翌営業日始値で買い候補",
                 "chart_url": f"https://www.tradingview.com/chart/?symbol=TSE%3A{code}",
             }
@@ -202,7 +202,7 @@ def rank_latest_candidates(
     columns = [
         "rank", "code", "company_name", "signal_date", "close", "momentum63_pct",
         "weekly_filter_ok", "weekly_status", "weekly_dead_cross", "exit_status",
-        "daily_ema9", "daily_ema21", "weekly_ema9", "weekly_ema21", "action", "chart_url",
+        "daily_ema20", "daily_ema30", "weekly_ema20", "weekly_ema30", "action", "chart_url",
     ]
     if ranked.empty:
         ranked = pd.DataFrame(columns=columns)
@@ -288,7 +288,7 @@ def run(components_path: Path, output: Path, as_of: date | None = None) -> tuple
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="JPX400 EMA9/21 BUY screener")
+    parser = argparse.ArgumentParser(description="JPX400 EMA20/30 BUY screener")
     parser.add_argument("--components", type=Path, default=Path("data/components.csv"))
     parser.add_argument("--output", type=Path, default=Path("_site"))
     parser.add_argument("--as-of", type=date.fromisoformat)

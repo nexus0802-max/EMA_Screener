@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="JPX400 EMA9/21 BUYシグナルランキング">
+  <meta name="description" content="JPX400 EMA20/30 BUYシグナルランキング">
   <title>EMA SIGNALS | JPX400</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,7 +11,7 @@
   <header class="hero">
     <div>
       <p class="eyebrow">JPX400 / RANK 1 STRATEGY</p>
-      <h1>EMA9/21 BUY SIGNALS</h1>
+      <h1>EMA20/30 BUY SIGNALS</h1>
       <p class="lead">日足CのBUY確定銘柄を、63日モメンタムの高い順に表示します。</p>
     </div>
     <a class="download" id="download-csv" href="latest.csv" download>ランキングCSVを保存</a>
@@ -59,9 +59,9 @@
       <article>
         <h3>BUY判定</h3>
         <ol>
-          <li>前日終値が前日EMA9より上</li>
-          <li>当日の値幅がEMA9〜EMA21帯に入る</li>
-          <li>当日終値がEMA21より上</li>
+          <li>前日終値が前日EMA20より上</li>
+          <li>当日の値幅がEMA20〜EMA30帯に入る</li>
+          <li>当日終値がEMA30より上</li>
           <li>陽線かつ当日終値が前日高値を上回る</li>
         </ol>
       </article>
@@ -72,7 +72,7 @@
       </article>
       <article>
         <h3>出口</h3>
-        <p>確定週足でEMA9がEMA21を下回ったら、翌営業日の始値で売却します。</p>
+        <p>確定週足でEMA20がEMA30を下回ったら、翌営業日の始値で売却します。</p>
         <p>固定利確・固定ストップは使用しません。</p>
       </article>
     </section>
